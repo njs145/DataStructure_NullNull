@@ -1,12 +1,36 @@
 #include "LinkedList.h"
 
-USERDATA    g_USERDATA;
+USERDATA    g_head_node;
+
+static USERDATA* search_linked_list_to_remove(USERDATA **prev_node, char *search_str)
+{
+    USERDATA *curr_node = NULL;
+
+    *prev_node = &g_head_node;
+    curr_node = g_head_node.next_user;
+
+    while(strcmp(search_str, curr_node->name) != 0)
+    {
+        if(curr_node->next_user == NULL)
+        {
+            printf("%s not found\n",search_str);
+            return NULL;
+        }
+        else
+        {
+            *prev_node = curr_node;
+            curr_node = curr_node->next_user;
+        }
+    }
+
+    return curr_node;
+}
 
 void print_linked_list(void)
 {
     USERDATA *temp_data = NULL;
     
-    temp_data = g_USERDATA.next_user;
+    temp_data = g_head_node.next_user;
     while(temp_data != NULL)
     {
         printf("[%p] %s %s %d %p\n",temp_data, temp_data->name, temp_data->phone_number, temp_data->age, temp_data->next_user);
@@ -20,9 +44,10 @@ void add_linked_list(char *name, char *phone_number, __uint32_t age)
     USERDATA *temp_node = NULL;
 
     add_node = malloc(sizeof(USERDATA));
+    memset(add_node,0,sizeof(USERDATA));
     if(add_node != NULL)
     {
-        temp_node = &g_USERDATA;
+        temp_node = &g_head_node;
         strcpy(add_node->name, name);
         strcpy(add_node->phone_number, phone_number);
         add_node->age = age;
@@ -56,8 +81,8 @@ void release_linked_list(void)
     USERDATA *temp_data = NULL;
     USERDATA *delete_data = NULL;
 
-    delete_data = g_USERDATA.next_user;
-    g_USERDATA.next_user = NULL;
+    delete_data = g_head_node.next_user;
+    g_head_node.next_user = NULL;
 
     while(delete_data != NULL)
     {
@@ -71,7 +96,7 @@ void release_linked_list(void)
 
 USERDATA* search_linked_list(char *search_str)
 {
-    USERDATA *search_point = g_USERDATA.next_user;
+    USERDATA *search_point = g_head_node.next_user;
 
     while(strcmp(search_str, search_point->name) != 0)
     {
@@ -86,4 +111,16 @@ USERDATA* search_linked_list(char *search_str)
         }
     }
     return search_point;
+}
+
+void remove_linked_list(char *search_str)
+{
+    USERDATA *prev_node = NULL;
+    USERDATA *curr_node = NULL;
+
+    curr_node = search_linked_list_to_remove(&prev_node, search_str);
+    
+    prev_node->next_user = curr_node->next_user;
+
+    free(curr_node);
 }
