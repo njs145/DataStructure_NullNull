@@ -1,5 +1,4 @@
 #include "LinkedList.h"
-#include "../common/common.h"
 
 USERDATA    g_USERDATA;
 
@@ -68,4 +67,23 @@ void release_linked_list(void)
         delete_data = temp_data;
     }
     
+}
+
+USERDATA* search_linked_list(char *search_str)
+{
+    USERDATA *search_point = g_USERDATA.next_user;
+
+    while(strcmp(search_str, search_point->name) != 0)
+    {
+        if(search_point->next_user == NULL)
+        {
+            printf("%s not found\n",search_str);
+            return NULL;
+        }
+        else
+        {
+            search_point = search_point->next_user;
+        }
+    }
+    return search_point;
 }
