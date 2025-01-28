@@ -1,36 +1,34 @@
 #include "LinkedList.h"
 
-USERDATA    g_head_node;
+USERDATA    g_head_node = {"__dummy node__"," ",0};
 
-static USERDATA* search_linked_list_to_remove(USERDATA **prev_node, char *search_str)
+static USERDATA* search_linked_list_to_remove(char *search_str)
 {
-    USERDATA *curr_node = NULL;
+    USERDATA *prev_node = NULL;
 
-    *prev_node = &g_head_node;
-    curr_node = g_head_node.next_user;
+    prev_node = &g_head_node;
 
-    while(strcmp(search_str, curr_node->name) != 0)
+    while(strcmp(search_str, prev_node->next_user->name) != 0)
     {
-        if(curr_node->next_user == NULL)
+        if(prev_node->next_user->name == NULL)
         {
             printf("%s not found\n",search_str);
             return NULL;
         }
         else
         {
-            *prev_node = curr_node;
-            curr_node = curr_node->next_user;
+            prev_node = prev_node->next_user;
         }
     }
 
-    return curr_node;
+    return prev_node;
 }
 
 void print_linked_list(void)
 {
     USERDATA *temp_data = NULL;
     
-    temp_data = g_head_node.next_user;
+    temp_data = &g_head_node;
     while(temp_data != NULL)
     {
         printf("[%p] %s %s %d %p\n",temp_data, temp_data->name, temp_data->phone_number, temp_data->age, temp_data->next_user);
@@ -116,11 +114,13 @@ USERDATA* search_linked_list(char *search_str)
 void remove_linked_list(char *search_str)
 {
     USERDATA *prev_node = NULL;
-    USERDATA *curr_node = NULL;
+    USERDATA *temp_node = NULL;
 
-    curr_node = search_linked_list_to_remove(&prev_node, search_str);
+    prev_node = search_linked_list_to_remove(search_str);
     
-    prev_node->next_user = curr_node->next_user;
-
-    free(curr_node);
+    temp_node = prev_node->next_user;
+    printf("Delete data: [%p] %s %s %d %p\n",temp_node, temp_node->name, temp_node->phone_number, temp_node->age, temp_node->next_user);
+    prev_node->next_user = prev_node->next_user->next_user;
+    
+    free(temp_node);
 }
