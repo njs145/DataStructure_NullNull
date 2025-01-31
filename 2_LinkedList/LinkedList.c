@@ -1,6 +1,13 @@
 #include "LinkedList.h"
 
-USERDATA    g_head_node = {"__dummy node__"," ",0};
+USERDATA    g_head_node = {"__dummy head node__"," ",0};
+USERDATA    g_tail_node = {"__dummy tail node__"," ",0};
+
+void init_linked_list(void)
+{
+    g_head_node.next_user = &g_tail_node;
+    g_tail_node.prev_user = &g_head_node;
+}
 
 static USERDATA* search_linked_list_to_remove(char *search_str)
 {
@@ -29,7 +36,7 @@ void print_linked_list(void)
     USERDATA *temp_data = NULL;
     
     temp_data = &g_head_node;
-    while(temp_data != NULL)
+    while(temp_data != &g_tail_node)
     {
         printf("[%p] %s %s %d %p\n",temp_data, temp_data->name, temp_data->phone_number, temp_data->age, temp_data->next_user);
         temp_data = temp_data->next_user;
@@ -49,15 +56,20 @@ void add_linked_list(char *name, char *phone_number, __uint32_t age)
         strcpy(add_node->name, name);
         strcpy(add_node->phone_number, phone_number);
         add_node->age = age;
+        printf("Add data: [%p] %s %s %d %p\n",add_node, add_node->name, add_node->phone_number, add_node->age, add_node->next_user);
     #if (ADD_TYPE == ADD_TYPE_HEAD)
         add_node->next_user = temp_node->next_user;    
         temp_node->next_user = add_node;
+        add_node->prev_user = temp_node; 
     #else
-        while(temp_node->next_user != NULL)
+        while(temp_node->next_user != &g_tail_node)
         {
             temp_node = temp_node->next_user;
         }
         temp_node->next_user = add_node;
+        add_node->prev_user = temp_node;
+        add_node->next_user = &g_tail_node;
+        
     #endif
     }
     else
@@ -82,7 +94,6 @@ void release_linked_list(void)
         free(delete_data);
         delete_data = temp_data;
     }
-    
 }
 
 USERDATA* search_linked_list(char *search_str)
@@ -114,6 +125,7 @@ void remove_linked_list(char *search_str)
     temp_node = prev_node->next_user;
     printf("Delete data: [%p] %s %s %d %p\n",temp_node, temp_node->name, temp_node->phone_number, temp_node->age, temp_node->next_user);
     prev_node->next_user = prev_node->next_user->next_user;
+    temp_node->next_user->prev_user = prev_node;
     
     free(temp_node);
 }

@@ -6,4 +6,5 @@ typedef struct USERDATA
     char phone_number[32];
     __uint32_t age;
     struct USERDATA* next_user;
+    struct USERDATA* prev_user;
 }USERDATA;

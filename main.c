@@ -44,5 +44,7 @@ static void delete_linkedlist_test(void)
 
 int main(void)
 {   
+    init_linked_list();
+    delete_linkedlist_test();
     return 0;
 }
