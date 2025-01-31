@@ -50,19 +50,12 @@ void add_linked_list(char *name, char *phone_number, __uint32_t age)
         strcpy(add_node->phone_number, phone_number);
         add_node->age = age;
     #if (ADD_TYPE == ADD_TYPE_HEAD)
-        if(temp_node->next_user != NULL)
-        {
-            add_node->next_user = temp_node->next_user;    
-        }
+        add_node->next_user = temp_node->next_user;    
         temp_node->next_user = add_node;
-    
     #else
-        if(temp_node->next_user != NULL)
+        while(temp_node->next_user != NULL)
         {
-            while(temp_node->next_user != NULL)
-            {
-                temp_node = temp_node->next_user;
-            }
+            temp_node = temp_node->next_user;
         }
         temp_node->next_user = add_node;
     #endif
