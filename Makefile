@@ -10,6 +10,7 @@ OC = /usr/bin/aarch64-linux-gnu-objcopy
 OD = /usr/bin/aarch64-linux-gnu-objdump
 
 # 출력 파일 이름 정의.
+output = build
 MAP_FILE = build/data_structure.map
 ASM_FILE = build/data_structure.asm
 data_structure = build/data_structure
@@ -51,9 +52,10 @@ clean:
 $(data_structure): $(C_OBJS)
 	$(LD) -o $(data_structure) $(C_OBJS) -Wl,-Map=$(MAP_FILE) $(LDFLAGS)
 	$(OD) -d $(data_structure) >> $(ASM_FILE)
+	rm $(output)/*.o
 
 # c파일 컴파일
-build/%.o: %.c
+$(output)/%.o: %.c
 	mkdir -p $(shell dirname $@)
 	@echo $(CC) $(INC_DIRS) $(CFLAGS) -o $@ $<
 	$(CC) $(INC_DIRS) $(CFLAGS) -o $@ $<
