@@ -22,42 +22,37 @@ LDFLAGS = -static -lgcc
 
 # 컴파일 목록들 정의.
 C_SRCS = $(wildcard *.c)
-C_SRCS += $(notdir $(wildcard 1_Background/*.c))
-C_SRCS += $(notdir $(wildcard 2_LinkedList/*.c))
+C_SRCS += $(notdir $(wildcard Background/*.c))
+C_SRCS += $(notdir $(wildcard LinkedList/*.c))
 C_SRCS += $(notdir $(wildcard common/*.c))
 C_OBJS = $(patsubst %.c, build/%.o, $(C_SRCS))
 
 # 컴파일 경로 정의
-INC_DIRS = -I 1_Background	\
-		   -I 2_LinkedList	\
+INC_DIRS = -I Background	\
+		   -I LinkedList	\
 		   -I common
 
 # Makefile의 검색 경로 설정
-VPATH = 1_Background \
-		2_LinkedList \
+VPATH = Background \
+		LinkedList \
 		common \
 
 # Makefile 타겟 정의
 .PHONY: all clean
 
+# build
 all: $(data_structure)
 
+# build 폴더 삭제
 clean:
 	@rm -fr build
 
-run: $(data_structure)
-	qemu-system-arm -M realview-pb-a8 -kernel $(data_structure) -nographic -audiodev id=none,driver=none 
-
-debug: $(data_structure)
-	qemu-system-arm -M realview-pb-a8 -kernel $(data_structure) -S -nographic -audiodev id=none,driver=none -gdb tcp::1234,ipv4
-	
-gdb:
-	gdb-multiarch
-
+# object파일 링크
 $(data_structure): $(C_OBJS)
 	$(LD) -o $(data_structure) $(C_OBJS) -Wl,-Map=$(MAP_FILE) $(LDFLAGS)
 	$(OD) -d $(data_structure) >> $(ASM_FILE)
 
+# c파일 컴파일
 build/%.o: %.c
 	mkdir -p $(shell dirname $@)
 	@echo $(CC) $(INC_DIRS) $(CFLAGS) -o $@ $<

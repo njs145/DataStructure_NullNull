@@ -7,8 +7,8 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "1_Background/Background.c",
-                "2_LinkedList/LinkedList.c",
+                "Background/Background.c",
+                "LinkedList/LinkedList.c",
                 "common/common.c",
                 "main.c",
                 "-o",
