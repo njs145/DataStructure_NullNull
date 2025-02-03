@@ -1,5 +1,5 @@
 #include "Background.h"
-#include "../common/common.h"
+#include "common.h"
 
 void Simple_LinkedList_App(void)
 {

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "/usr/include/assert.h"
-#include "../common/common.h"
+#include "common.h"
 
 #define ADD_TYPE_TAIL       0
 #define ADD_TYPE_HEAD       1

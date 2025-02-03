@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "Background/Background.h"
-#include "LinkedList/LinkedList.h"
+#include "Background.h"
+#include "LinkedList.h"
 
 static void add_dummy_list(void)
 {

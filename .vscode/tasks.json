@@ -6,6 +6,12 @@
             "command": "/usr/bin/aarch64-linux-gnu-gcc",
             "args": [
                 "-fdiagnostics-color=always",
+                "-I", 
+                "Background",
+                "-I", 
+                "LinkedList",
+                "-I", 
+                "common",
                 "-g",
                 "Background/Background.c",
                 "LinkedList/LinkedList.c",
