@@ -1,3 +1,6 @@
+#ifndef __UI_C
+#define __UI_C
+
 #include "UI.h"
 
 static __uint32_t line_len = 0;
@@ -125,3 +128,5 @@ void UI_event_loop_exec_test(exec_test_t *exec_test, __uint32_t test_num)
 
     }while(select != 0);
 }
+
+#endif
