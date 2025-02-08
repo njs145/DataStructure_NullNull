@@ -1,3 +1,6 @@
+#ifndef __COMMON_H
+#define __COMMON_H
+
 #include <stdio.h>
 
 typedef struct USERDATA
@@ -8,3 +11,5 @@ typedef struct USERDATA
     struct USERDATA* next_user;
     struct USERDATA* prev_user;
 }USERDATA;
+
+#endif
