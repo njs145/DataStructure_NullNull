@@ -5,17 +5,20 @@
 #include "common.h"
 #include "UI.h"
 #include "Queue.h"
+#include "Stack.h"
 #include "util.h"
 
 #define TEST_ENQUEUE_DATA_MAX_SIZE  10
 
 static void delete_linkedlist_test(void);
 static void queue_test(void);
+static void stack_test(void);
 
 exec_test_t data_structure_exec_func[MAX_OF_TEST + 1] = {
     [TITLE]  = {"Data Structure TEST (By JinSong)", NULL},
     [TEST_1] = {"1. Linked List Test", delete_linkedlist_test},
-    [TEST_2] = {"2. Queue Test", queue_test}
+    [TEST_2] = {"2. Queue Test", queue_test},
+    [TEST_3] = {"3. Stack Test", stack_test}
 };
 
 static void add_dummy_list(void)
@@ -109,6 +112,11 @@ static void queue_test(void)
     util_print_data(dequeue_data, 3);
 
     queue_release(q);
+}
+
+static void stack_test(void)
+{
+
 }
 
 int main(void)

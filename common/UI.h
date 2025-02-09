@@ -13,7 +13,7 @@
 #define TEST_4          4U
 #define TEST_5          5U
 #define TEST_6          6U
-#define MAX_OF_TEST     TEST_2
+#define MAX_OF_TEST     TEST_3
 
 
 
