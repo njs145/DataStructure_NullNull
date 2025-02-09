@@ -10,7 +10,7 @@ static err_queue queue_is_overrun(queue *pt_queue, __uint32_t size)
         front = pt_queue->front;
         rear = pt_queue->rear;
         max_size = pt_queue->max_size;
-        if((max_size -(rear % max_size) - (front % max_size)) >= size)
+        if((max_size - (rear % max_size) - (front % max_size)) >= size)
         {
             ret = err_queue_success;
         }
@@ -37,7 +37,7 @@ static err_queue queue_is_underrun(queue *pt_queue, __uint32_t size)
         front = pt_queue->front;
         rear = pt_queue->rear;
         max_size = pt_queue->max_size;
-        if((rear % max_size) - (front % max_size) >= size)
+        if(((rear - 1) % max_size) - (front % max_size) + 1 >= size)
         {
             ret = err_queue_success;
         }
@@ -178,6 +178,8 @@ err_queue queue_enqueue(queue *pt_queue, __uint8_t *data, __uint32_t size)
         ret = err_queue_invalid_queue;
     }
 
+    printf("[enquque] Current queue info: front: %d, rear: %d\n",(pt_queue->front % max_size), (pt_queue->rear % max_size));
+
     return ret;
 }
 
@@ -223,6 +225,51 @@ err_queue queue_dequeue(queue *pt_queue, __uint8_t *data, __uint32_t size)
         ret = err_queue_invalid_queue;
     }
 
+    printf("[dequeue] Current queue info: front: %d, rear: %d\n",(pt_queue->front % max_size), (pt_queue->rear % max_size));
+
+    return ret;
+}
+
+err_queue queue_peek(queue *pt_queue, __uint8_t *data, __uint32_t size)
+{
+    err_queue ret;
+    __uint32_t front, rear, max_size;
+    __uint32_t current_front_point;
+    __int32_t carry_size;
+
+    if(pt_queue != NULL)
+    {
+        ret = queue_is_empty(pt_queue);
+        if(ret != err_queue_empty)
+        {
+            ret = queue_is_underrun(pt_queue, size);
+            if(ret != err_queue_underrun)
+            {
+                front = pt_queue->front;
+                rear = pt_queue->rear;
+                max_size = pt_queue->max_size;
+
+                current_front_point = front % max_size;
+                carry_size = (carry_size + size - max_size);
+                if(carry_size > 0)
+                {
+                    memcpy(data, &pt_queue->data[current_front_point], (size - carry_size));
+                    memcpy(&data[size - carry_size], pt_queue->data, carry_size);
+                }
+                else
+                {
+                    memcpy(data, &pt_queue->data[current_front_point], size);
+                }
+            }
+        }
+    }
+    else
+    {
+        ret = err_queue_invalid_queue;
+    }
+
+    printf("[dequeue] Current queue info: front: %d, rear: %d\n",(pt_queue->front % max_size), (pt_queue->rear % max_size));
+
     return ret;
 }
 
@@ -254,7 +301,6 @@ err_queue queue_release(queue *pt_queue)
     {
         ret = err_queue_invalid_queue;
     }
-
     return ret;
 }
 

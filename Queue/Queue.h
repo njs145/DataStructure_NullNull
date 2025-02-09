@@ -30,4 +30,5 @@ extern err_queue queue_init(queue **pt_queue, __uint32_t size);
 extern err_queue queue_enqueue(queue *pt_queue, __uint8_t *data, __uint32_t size);
 extern err_queue queue_dequeue(queue *pt_queue, __uint8_t *data, __uint32_t size);
 extern err_queue queue_release(queue *pt_queue);
+extern err_queue queue_peek(queue *pt_queue, __uint8_t *data, __uint32_t size);
 extern void queue_err_handler(err_queue err);

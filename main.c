@@ -94,53 +94,19 @@ static void queue_test(void)
         printf("error: test enqueue_ascending_data alloc fail!\n");
         assert(0);
     }
-    
-    ret = queue_init(&q, TEST_ENQUEUE_DATA_MAX_SIZE);
-    if(ret == err_queue_success)
-    {
-        ret = queue_enqueue(q, enqueue_ascending_data, 3U);
-        if(ret == err_queue_success)
-        {
-            ret = queue_enqueue(q, enqueue_descending_data, 3U);
-            if(ret == err_queue_success)
-            {
-                ret = queue_dequeue(q, dequeue_data, 6);
-                if(ret == err_queue_success)
-                {
-                    print_data(dequeue_data, 6);
 
-                    ret = queue_enqueue(q, enqueue_ascending_data, 10U);
-                    print_data(dequeue_data, 6);
-                    ret = queue_enqueue(q, enqueue_ascending_data, 3U);
-                    ret = queue_enqueue(q, enqueue_descending_data, 3U);
-                    ret = queue_enqueue(q, enqueue_ascending_data, 3U);
-                    queue_err_handler(ret);
-                    ret = queue_dequeue(q, dequeue_data, 6);
-                    print_data(dequeue_data, 6);
-                    ret = queue_dequeue(q, dequeue_data, 6);
-                    queue_err_handler(ret);
-                    print_data(dequeue_data, 6);
-                }
-                else
-                {
-                    queue_err_handler(ret);
-                }
-            }
-            else
-            {
-                queue_err_handler(ret);
-            }
-        }
-        else
-        {
-            queue_err_handler(ret);
-        }
-    }
-    else
-    {
-        queue_err_handler(ret);
-        assert(0);
-    }
+    util_check_success(queue_init(&q, 10));
+
+    util_check_success(queue_enqueue(q, enqueue_ascending_data, 10));
+
+    util_check_success(queue_peek(q, dequeue_data, 3));
+    util_print_data(dequeue_data, 3);
+
+    util_check_success(queue_peek(q, dequeue_data, 3));
+    util_print_data(dequeue_data, 3);
+
+    util_check_success(queue_peek(q, dequeue_data, 3));
+    util_print_data(dequeue_data, 3);
 
     queue_release(q);
 }
