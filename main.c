@@ -95,18 +95,21 @@ static void queue_test(void)
         assert(0);
     }
 
-    util_check_success(queue_init(&q, 10));
+    util_check_success(queue_init(&q, 11));
 
     util_check_success(queue_enqueue(q, enqueue_ascending_data, 10));
 
-    util_check_success(queue_peek(q, dequeue_data, 3));
+    util_check_success(queue_dequeue(q, dequeue_data, 3));
     util_print_data(dequeue_data, 3);
 
-    util_check_success(queue_peek(q, dequeue_data, 3));
+    util_check_success(queue_dequeue(q, dequeue_data, 3));
     util_print_data(dequeue_data, 3);
 
-    util_check_success(queue_peek(q, dequeue_data, 3));
-    util_print_data(dequeue_data, 3);
+    util_check_success(queue_enqueue(q, enqueue_ascending_data, 3));
+    util_check_success(queue_enqueue(q, enqueue_ascending_data, 3));
+
+    util_check_success(queue_dequeue(q, dequeue_data, 6));
+    util_print_data(dequeue_data, 6);
 
     queue_release(q);
 }
