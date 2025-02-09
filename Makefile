@@ -27,19 +27,25 @@ C_SRCS += $(notdir $(wildcard Background/*.c))
 C_SRCS += $(notdir $(wildcard LinkedList/*.c))
 C_SRCS += $(notdir $(wildcard common/*.c))
 C_SRCS += $(notdir $(wildcard Queue/*.c))
+C_SRCS += $(notdir $(wildcard Sample/Sample_LinkedList/*.c))
+C_SRCS += $(notdir $(wildcard Sample/Sample_Queue/*.c))
 C_OBJS = $(patsubst %.c, build/%.o, $(C_SRCS))
 
 # 컴파일 경로 정의
-INC_DIRS = -I Background	\
-		   -I LinkedList	\
-		   -I common		\
-		   -I Queue			\
+INC_DIRS = 	-I Background						\
+		   	-I LinkedList						\
+		   	-I common							\
+		   	-I Queue							\
+			-I Sample/Sample_LinkedList			\
+		   	-I Sample/Sample_Queue		   		\
 
 # Makefile의 검색 경로 설정
-VPATH = Background 			\
-		LinkedList 			\
-		common 				\
-		Queue  				\
+VPATH = Background 						\
+		LinkedList 						\
+		common 							\
+		Queue  							\
+		Sample/Sample_LinkedList		\
+		Sample/Sample_Queue		   		\
 
 # Makefile 타겟 정의
 .PHONY: all clean
