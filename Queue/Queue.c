@@ -163,7 +163,7 @@ err_queue queue_enqueue(queue *pt_queue, __uint8_t *data, __uint32_t size)
                 if(carry_size > 0)
                 {
                     memcpy(&pt_queue->data[current_rear_point], data, (size - carry_size));
-                    memcpy(&pt_queue->data, &data[(size - carry_size)],  carry_size);    
+                    memcpy(pt_queue->data, &data[(size - carry_size)],  carry_size);    
                 }
                 else
                 {
@@ -178,7 +178,7 @@ err_queue queue_enqueue(queue *pt_queue, __uint8_t *data, __uint32_t size)
         ret = err_queue_invalid_queue;
     }
 
-    printf("[enquque] Current queue info: front: %d, rear: %d\n",(pt_queue->front % max_size), (pt_queue->rear % max_size));
+    printf("[enquque] Current queue info: front: %d, rear: %d [0x%p]\n",(pt_queue->front % max_size), (pt_queue->rear % max_size), pt_queue);
 
     return ret;
 }
@@ -225,7 +225,7 @@ err_queue queue_dequeue(queue *pt_queue, __uint8_t *data, __uint32_t size)
         ret = err_queue_invalid_queue;
     }
 
-    printf("[dequeue] Current queue info: front: %d, rear: %d\n",(pt_queue->front % max_size), (pt_queue->rear % max_size));
+    printf("[dequque] Current queue info: front: %d, rear: %d [0x%p]\n",(pt_queue->front % max_size), (pt_queue->rear % max_size), pt_queue);
 
     return ret;
 }
