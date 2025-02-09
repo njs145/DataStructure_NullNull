@@ -3,6 +3,6 @@
 
 #include <stdio.h>
 
-extern void print_data(__uint8_t *data, __uint32_t size);
-
+extern void util_print_data(__uint8_t *data, __uint32_t size);
+extern void util_check_success(int err);
 #endif

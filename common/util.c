@@ -2,8 +2,9 @@
 #define __UTIL_C
 
 #include "util.h"
+#include "Queue.h"
 
-void print_data(__uint8_t *data, __uint32_t size)
+void util_print_data(__uint8_t *data, __uint32_t size)
 {
     __uint32_t i, j;
     __uint32_t col_per_num, left_size;
@@ -28,6 +29,11 @@ void print_data(__uint8_t *data, __uint32_t size)
         left_size -= 16;
         printf("\n");
     }
+}
+
+void util_check_success(int err)
+{
+    queue_err_handler(err);
 }
 
 #endif
