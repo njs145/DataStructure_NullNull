@@ -1,3 +1,6 @@
+#ifndef __LINKED_LIST_H__
+#define __LINKED_LIST_H__
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,3 +17,5 @@ extern void release_linked_list(void);
 extern USERDATA* search_linked_list(char *search_str);
 extern void remove_linked_list(char *search_str);
 extern void init_linked_list(void);
+
+#endif
