@@ -31,6 +31,16 @@ static USERDATA* search_linked_list_to_remove(char *search_str)
     return prev_node;
 }
 
+USERDATA* get_first_list(void)
+{
+    return g_ll_head_node.next_user;
+}
+
+USERDATA* get_last_list(void)
+{
+    return g_ll_tail_node.prev_user;
+}
+
 void print_linked_list(void)
 {
     USERDATA *temp_data = NULL;
@@ -113,6 +123,23 @@ USERDATA* search_linked_list(char *search_str)
         }
     }
     return search_point;
+}
+
+__uint32_t get_list_count(void)
+{
+    USERDATA *temp_list = NULL;
+    __uint32_t count;
+
+    temp_list = &g_ll_head_node;
+    count = 0;
+
+    while (temp_list->next_user != &g_ll_tail_node)
+    {  
+        temp_list = temp_list->next_user;
+        count ++;
+    }
+    
+    return count;
 }
 
 void remove_linked_list(char *search_str)

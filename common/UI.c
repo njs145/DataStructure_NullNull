@@ -129,4 +129,47 @@ void UI_event_loop_exec_test(exec_test_t *exec_test, __uint32_t test_num)
     }while(select != 0);
 }
 
+void UI_event_loop_exec_database(exec_test_t *exec_test, __uint32_t test_num)
+{
+    __uint32_t select = 0;
+    __uint32_t count;
+
+    do
+    {
+        /* cursor go to top & screen clear */
+        printf("\033[H\033[J");
+
+        printf("\n");
+        UI_print_manu_title(exec_test[0].test_name);
+        printf("\n");
+
+        /* print menu */
+        for(count = 1; count < test_num; count ++)
+        {
+            printf("%s   ",exec_test[count].test_name);
+        }
+        printf("\n\n");
+
+        if(select != 0)
+        {
+            if(exec_test[select].exec_func != NULL)
+            {
+                exec_test[select].exec_func();
+            }
+            else
+            {
+                printf("Can't execute\n");
+            }
+        }
+
+        printf("\n");
+        UI_print_line(line_len,'=');
+        printf("\n");
+        printf("select: ");
+        scanf(" %d",&select);
+
+    } while (select != 0);
+    
+}
+
 #endif

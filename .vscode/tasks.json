@@ -23,7 +23,8 @@
                 "LinkedList/*.c",
                 "common/*.c",
                 "Queue/*.c",
-                "Sample/**/*.c",
+                "Sample/**/Sample_LinkedList.c",
+                "Sample/**/Sample_Queue.c",
                 "*.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"

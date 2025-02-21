@@ -13,7 +13,7 @@
 #define TEST_4          4U
 #define TEST_5          5U
 #define TEST_6          6U
-#define MAX_OF_TEST     TEST_2
+#define MAX_OF_TEST     TEST_5
 
 
 
@@ -27,5 +27,6 @@ typedef struct exec_test
 
 extern void UI_print_manu_title(char *title);
 extern void UI_event_loop_exec_test(exec_test_t *exec_test, __uint32_t test_num);
+extern void UI_event_loop_exec_database(exec_test_t *exec_test, __uint32_t test_num);
 
 #endif
