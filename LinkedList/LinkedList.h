@@ -7,6 +7,8 @@
 #include "/usr/include/assert.h"
 #include "common.h"
 
+#define MAX_OF_NODE  256
+
 #define ADD_TYPE_TAIL       0
 #define ADD_TYPE_HEAD       1
 #define ADD_TYPE            ADD_TYPE_TAIL
@@ -20,5 +22,6 @@ extern USERDATA* search_linked_list(char *search_str);
 extern void remove_linked_list(char *search_str);
 extern void init_linked_list(void);
 extern __uint32_t get_list_count(void);
+extern __uint32_t *LinkedList_get_age_index(void);
 
 #endif

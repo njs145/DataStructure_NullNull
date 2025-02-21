@@ -3,11 +3,7 @@
 USERDATA    g_ll_head_node = {"__dummy head node__"," ",0};
 USERDATA    g_ll_tail_node = {"__dummy tail node__"," ",0};
 
-void init_linked_list(void)
-{
-    g_ll_head_node.next_user = &g_ll_tail_node;
-    g_ll_tail_node.prev_user = &g_ll_head_node;
-}
+static __uint32_t g_age_index[MAX_OF_NODE] = { 0 };
 
 static USERDATA* search_linked_list_to_remove(char *search_str)
 {
@@ -29,6 +25,64 @@ static USERDATA* search_linked_list_to_remove(char *search_str)
     }
 
     return prev_node;
+}
+
+void LinkedList_update_index_age(void)
+{
+    USERDATA *cur_node;
+    USERDATA **node_index = NULL;
+    __uint32_t *index = g_age_index;
+    __uint32_t *age_data = NULL;
+    __uint32_t count_node;
+    __uint32_t i, j, temp_index, temp_age;
+
+    count_node = get_list_count();
+    // printf("node count: %d\n",count_node);
+
+    node_index = malloc(count_node * sizeof(USERDATA *));
+    age_data = malloc(count_node * sizeof(__uint32_t *));
+
+    /* node init index */
+    cur_node = get_first_list();
+    for(i = 0; i < count_node; i ++)
+    {
+        // printf("current name: %s\n",cur_node->name);
+        node_index[i] = cur_node;
+        cur_node = cur_node->next_user;
+
+        index[i] = i;
+        age_data[i] = node_index[i]->age;
+    }
+
+    // printf("%d %d %d %d %d %d \n",index[0], index[1], index[2], index[3], index[4], index[5]);
+    for(i = 0; i < count_node; i ++)
+    { 
+        for(j = i; j < count_node; j ++)
+        {
+            if(age_data[i] >= age_data[j])
+            {
+                temp_age = age_data[i];
+                temp_index = index[i];
+
+                age_data[i] = age_data[j];
+                index[i] = index[j];
+
+                age_data[j] = temp_age;
+                index[j] = temp_index;
+            }
+
+        }    
+    }
+
+    // printf("%d %d %d %d %d %d \n",index[0], index[1], index[2], index[3], index[4], index[5]);
+    free(node_index);
+    free(age_data);
+}
+
+void init_linked_list(void)
+{
+    g_ll_head_node.next_user = &g_ll_tail_node;
+    g_ll_tail_node.prev_user = &g_ll_head_node;
 }
 
 USERDATA* get_first_list(void)
@@ -87,6 +141,8 @@ void add_linked_list(char *name, char *phone_number, __uint32_t age)
         printf("memory alloc fail!\n func:%s, line:%d",__func__, __LINE__);
         assert(0);
     }
+
+    LinkedList_update_index_age();
 }
 
 void release_linked_list(void)
@@ -154,5 +210,12 @@ void remove_linked_list(char *search_str)
     prev_node->next_user = prev_node->next_user->next_user;
     temp_node->next_user->prev_user = prev_node;
     
+    LinkedList_update_index_age();
+    
     free(temp_node);
+}
+
+__uint32_t *LinkedList_get_age_index(void)
+{
+    return g_age_index;
 }

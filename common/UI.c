@@ -148,6 +148,7 @@ void UI_event_loop_exec_database(exec_test_t *exec_test, __uint32_t test_num)
         {
             printf("%s   ",exec_test[count].test_name);
         }
+        printf("[0]Exit   ");
         printf("\n\n");
 
         if(select != 0)

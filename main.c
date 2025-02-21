@@ -10,7 +10,7 @@ exec_test_t data_structure_exec_func[MAX_OF_TEST + 1] = {
     [TEST_2] = {"[2]Search", Sample_LinkedList_search},
     [TEST_3] = {"[3]Search age", Sample_LinkedList_search_list_by_age},
     [TEST_4] = {"[4]Print", Sample_LinkedList_print_list},
-    [TEST_5] = {"[5]Remove", NULL}
+    [TEST_5] = {"[5]Remove", Sample_LinkedList_remove_list},
 };
 
 int main(void)

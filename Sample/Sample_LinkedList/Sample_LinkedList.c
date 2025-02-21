@@ -1,63 +1,5 @@
 #include "Sample_LinkedList.h"
 
-__uint32_t* Sample_LinkedList_make_index_age(void)
-{
-    USERDATA *cur_node, *next_node;
-    USERDATA **node_index = NULL;
-    __uint32_t *index = NULL;
-    __uint32_t *age_index = NULL;
-    __uint32_t count_node;
-    __uint32_t i, j, temp_index, temp_age;
-
-    count_node = get_list_count();
-    // printf("node count: %d\n",count_node);
-
-    node_index = malloc(count_node * sizeof(USERDATA *));
-    index = malloc(count_node * sizeof(__uint32_t *));
-    age_index = malloc(count_node * sizeof(__uint32_t *));
-
-    /* node init index */
-    cur_node = get_first_list();
-    for(i = 0; i < count_node; i ++)
-    {
-        // printf("current name: %s\n",cur_node->name);
-        node_index[i] = cur_node;
-        cur_node = cur_node->next_user;
-
-        index[i] = i;
-        age_index[i] = node_index[i]->age;
-    }
-
-    // printf("%d %d %d %d %d %d \n",index[0], index[1], index[2], index[3], index[4], index[5]);
-
-    printf("\n");
-
-    for(i = 0; i < count_node; i ++)
-    { 
-        for(j = i; j < count_node; j ++)
-        {
-            if(age_index[i] >= age_index[j])
-            {
-                temp_age = age_index[i];
-                temp_index = index[i];
-
-                age_index[i] = age_index[j];
-                index[i] = index[j];
-
-                age_index[j] = temp_age;
-                index[j] = temp_index;
-            }
-
-        }    
-    }
-
-    // printf("%d %d %d %d %d %d \n",index[0], index[1], index[2], index[3], index[4], index[5]);
-    free(node_index);
-    free(age_index);
-    // free(index);
-    return index;
-}
-
 void Sample_LinkedList_search_list_by_age(void)
 {
     __uint32_t *age_index = NULL;
@@ -74,7 +16,7 @@ void Sample_LinkedList_search_list_by_age(void)
     node_count = get_list_count();
     user_data = malloc(node_count * sizeof(USERDATA *));
     last_user_data = get_last_list();
-    age_index = Sample_LinkedList_make_index_age();
+    age_index = LinkedList_get_age_index();
 
     user_data[0] = get_first_list();
 
@@ -86,7 +28,7 @@ void Sample_LinkedList_search_list_by_age(void)
     // printf("%d %d %d %d %d %d ",user_data[0]->age, user_data[1]->age, user_data[2]->age, user_data[3]->age, user_data[4]->age, user_data[5]->age);
 
     count = 0;
-    while(user_data[age_index[count]]->age <= max_age)
+    while((user_data[age_index[count]]->age <= max_age) && (count < node_count))
     {
         if((user_data[age_index[count]]->age >= min_age) || (user_data[age_index[count]]->age >= max_age))
         {
@@ -97,7 +39,6 @@ void Sample_LinkedList_search_list_by_age(void)
     }
 
     free(user_data);
-    free(age_index);
 }
 
 void add_dummy_list(void)
@@ -129,6 +70,18 @@ void Sample_LinkedList_add_list(void)
     add_linked_list("다다다", "010-6666-6666", 22);
     add_linked_list("라라라", "010-6666-6666", 22);
     add_linked_list("나나나", "010-6666-6666", 22);
+}
+
+void Sample_LinkedList_remove_list(void)
+{
+    char name[256];
+
+    Sample_LinkedList_print_list();
+    printf("\n");
+    printf("Name: ");
+    scanf("%s",name);
+
+    remove_linked_list(name);
 }
 
 void Sample_LinkedList_print_list(void)

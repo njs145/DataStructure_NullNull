@@ -3,6 +3,7 @@
         "stdio.h": "c",
         "common.h": "c",
         "queue.h": "c",
-        "ui.h": "c"
+        "ui.h": "c",
+        "sample_linkedlist.h": "c"
     }
 }
