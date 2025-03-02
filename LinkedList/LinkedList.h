@@ -27,9 +27,10 @@ struct linkedlist
     node_t *head;
     node_t *tail;
     size_t data_size;
+    void* (*add_data)(void *);
     void (*print_node)(void *);
-    void (*update_node_index)(linkedlist_t *);
-    node_t* (*search_method)(linkedlist_t *, char *);
+    void (*update_node_index)(void *);
+    node_t* (*search_method)(void *, char *);
 };
 
 extern node_t* get_first_list(linkedlist_t *linkedlist);
@@ -39,7 +40,7 @@ extern void add_linked_list(linkedlist_t *list, void *data);
 extern void release_linked_list(linkedlist_t *list);
 extern node_t* search_linked_list(linkedlist_t *list, char *search_str);
 extern void remove_linked_list(linkedlist_t *list, char* search_str);
-extern linkedlist_t* init_linked_list(void (*print_func)(void *), void (*update_index)(linkedlist_t *list), size_t data_size);
+extern linkedlist_t* init_linked_list(void (*print_func)(void *), void* (*add_data)(void *), void (*update_index)(void *), node_t* (*search_method)(void *, char *), size_t data_size);
 extern __uint32_t get_list_count(linkedlist_t *list);
 
 #endif

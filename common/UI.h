@@ -22,11 +22,11 @@ void (*exec_func)(void);
 typedef struct exec_test
 {
     char *test_name;
-    void (*exec_func)(void);
+    void (*exec_func)(void *);
 }exec_test_t;
 
 extern void UI_print_manu_title(char *title);
-extern void UI_event_loop_exec_test(exec_test_t *exec_test, __uint32_t test_num);
-extern void UI_event_loop_exec_database(exec_test_t *exec_test, __uint32_t test_num);
+extern void UI_event_loop_exec_test(void *cookies, exec_test_t *exec_test, __uint32_t test_num);
+extern void UI_event_loop_exec_database(void *cookies, exec_test_t *exec_test, __uint32_t test_num);
 
 #endif

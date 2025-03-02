@@ -2,16 +2,21 @@
 
 static __uint32_t g_age_index[MAX_OF_NODE] = { 0 };
 
-linkedlist_t* init_linked_list(void (*print_func)(void *), void (*update_index)(linkedlist_t *list), size_t data_size)
+linkedlist_t* init_linked_list(void (*print_func)(void *), void* (*add_data)(void *), void (*update_index)(void *), node_t* (*search_method)(void *, char *), size_t data_size)
 {
     linkedlist_t *new_linked_list = NULL;
 
     new_linked_list = malloc(sizeof(linkedlist_t));
+    new_linked_list->head = malloc(sizeof(node_t));
+    new_linked_list->tail = malloc(sizeof(node_t));
 
-    new_linked_list->head = new_linked_list->tail;
-    new_linked_list->head = new_linked_list->head;
+    new_linked_list->head->next = new_linked_list->tail;
+    new_linked_list->tail->prev = new_linked_list->head;
 
     new_linked_list->print_node = print_func;
+    new_linked_list->update_node_index = update_index;
+    new_linked_list->search_method = search_method;
+    new_linked_list->add_data = add_data;
 
     return new_linked_list;
 }
@@ -34,15 +39,11 @@ void add_linked_list(linkedlist_t *list, void *data)
 
     data_size = list->data_size;
     add_node = malloc(sizeof(node_t));
-    temp_node = malloc(sizeof(node_t));
+    temp_node = list->head;
     memset(add_node,0,sizeof(node_t));
     if(add_node != NULL)
     {
-        memcpy(add_node->data, data, data_size);
-        // strcpy(add_node->name, name);
-        // strcpy(add_node->phone_number, phone_number);
-        // add_node->age = age;
-        list->print_node;
+        add_node->data = list->add_data(data);
     #if (ADD_TYPE == ADD_TYPE_HEAD)
         add_node->next = temp_node->next;    
         temp_node->next = add_node;
@@ -52,7 +53,9 @@ void add_linked_list(linkedlist_t *list, void *data)
         {
             temp_node = temp_node->next;
         }
-        
+        temp_node->next = add_node;
+        add_node->prev = temp_node;
+        add_node->next = list->tail;
         
     #endif
     }
@@ -62,7 +65,7 @@ void add_linked_list(linkedlist_t *list, void *data)
         assert(0);
     }
 
-    list->update_node_index;
+    list->update_node_index(list);
 }
 
 void release_linked_list(linkedlist_t *list)
@@ -111,16 +114,13 @@ __uint32_t get_list_count(linkedlist_t *list)
 void remove_linked_list(linkedlist_t *list, char* search_str)
 {
     node_t *remove_node = NULL;
-    node_t *temp_node = NULL;
     
-
     remove_node = list->search_method(list, search_str);
     
-    temp_node = remove_node->next;
-    remove_node->next = remove_node->next->next;
-    temp_node->next->prev = remove_node;
+    remove_node->prev->next = remove_node->next;
+    remove_node->next->prev = remove_node->prev;
     
     list->update_node_index;
     
-    free(temp_node);
+    free(remove_node);
 }

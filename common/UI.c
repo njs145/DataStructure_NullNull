@@ -107,7 +107,7 @@ void UI_print_manu(exec_test_t *exec_test, __uint32_t test_num)
     printf("\n");
 }
 
-void UI_event_loop_exec_test(exec_test_t *exec_test, __uint32_t test_num)
+void UI_event_loop_exec_test(void *cookies, exec_test_t *exec_test, __uint32_t test_num)
 {
     __uint32_t select;
 
@@ -123,13 +123,13 @@ void UI_event_loop_exec_test(exec_test_t *exec_test, __uint32_t test_num)
 
         if(select != 0)
         {
-            exec_test[select].exec_func();
+            exec_test[select].exec_func(cookies);
         }
 
     }while(select != 0);
 }
 
-void UI_event_loop_exec_database(exec_test_t *exec_test, __uint32_t test_num)
+void UI_event_loop_exec_database(void *cookies, exec_test_t *exec_test, __uint32_t test_num)
 {
     __uint32_t select = 0;
     __uint32_t count;
@@ -155,7 +155,7 @@ void UI_event_loop_exec_database(exec_test_t *exec_test, __uint32_t test_num)
         {
             if(exec_test[select].exec_func != NULL)
             {
-                exec_test[select].exec_func();
+                exec_test[select].exec_func(cookies);
             }
             else
             {
