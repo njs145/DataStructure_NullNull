@@ -18,6 +18,8 @@
                 "Sample/Sample_Queue",
                 "-I",
                 "Sample/Sample_LinkedList",
+                "-I",
+                "DBMS",
                 "-g",
                 "Background/*.c",
                 "LinkedList/*.c",
@@ -25,6 +27,7 @@
                 "Queue/*.c",
                 "Sample/**/Sample_LinkedList.c",
                 "Sample/**/Sample_Queue.c",
+                "DBMS/DBMS.c",                
                 "*.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"

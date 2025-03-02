@@ -11,8 +11,6 @@
 #define ADD_TYPE_HEAD       1
 #define ADD_TYPE            ADD_TYPE_TAIL
 
-#define MAX_OF_NODE  256
-
 typedef struct node node_t;
 struct node
 {

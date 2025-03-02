@@ -1,7 +1,5 @@
 #include "LinkedList.h"
 
-static __uint32_t g_age_index[MAX_OF_NODE] = { 0 };
-
 linkedlist_t* init_linked_list(void (*print_func)(void *), void* (*add_data)(void *), void (*update_index)(void *), node_t* (*search_method)(void *, char *), size_t data_size)
 {
     linkedlist_t *new_linked_list = NULL;
