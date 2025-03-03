@@ -175,7 +175,7 @@ void DBMS_print_all_user_information(void *list)
     while(node != target_list->tail)
     {
         // DBMS_print_user_information((user_info_data_t*)(node->data));
-        target_list->print_node((void *)(node->data));
+        target_list->hadler->print_node((void *)(node->data));
 
         node = node->next;
     }
@@ -197,7 +197,7 @@ void DBMS_search_user_by_name(void *list)
 
 
     /* print user information */
-    target_list->print_node((void *)(search_user->data));
+    target_list->hadler->print_node((void *)(search_user->data));
 }
 
 void DBMS_search_user_by_age(void *list)
@@ -269,21 +269,35 @@ void DBMS_search_remove_user_by_name(void *list)
     remove_linked_list(target_list, name);
 }
 
-linkedlist_t* DBMS_LinkedList_init_linked(void (*print_func)(void *), void* (*add_data)(void *), void (*update_index)(void *),
-                                   node_t* (*search_method)(void *, char *), size_t data_size)
+linkedlist_t* DBMS_LinkedList_init_linked(list_handler_t *handler, size_t data_size)
 {
     linkedlist_t * target_list = NULL;
     
     /* init list */
-    target_list = init_linked_list(print_func, add_data, update_index, search_method, data_size);
+    target_list = init_linked_list(handler, data_size);
     return target_list;
 }
 
 void DBMS_run_DBMS(void)
 {
+
+    /*
+    void* (*add_data)(void *);
+    void (*print_node)(void *);
+    void (*update_node_index)(void *);
+    node_t* (*search_method)(void *, char *);
+    void (*save_node_file)(void *, FILE *);
+    void (*load_node_file)(void *, FILE *);
+    */
     linkedlist_t *list = NULL;
+    list_handler_t list_handler = {
+        DBMS_add_data,
+        DBMS_print_user_information,
+        DBMS_update_index_age,
+        DBMS_search_by_name,
+    };
     
     /* get new list */
-    list = DBMS_LinkedList_init_linked(DBMS_print_user_information, DBMS_add_data, DBMS_update_index_age, DBMS_search_by_name, sizeof(user_info_data_t));
+    list = DBMS_LinkedList_init_linked(&list_handler, sizeof(user_info_data_t));
     UI_event_loop_exec_database((void *)list, data_structure_exec_func, sizeof(data_structure_exec_func)/sizeof(exec_test_t));
 }

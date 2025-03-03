@@ -19,16 +19,24 @@ struct node
     node_t *prev;
 };
 
-typedef struct linkedlist linkedlist_t;
-struct linkedlist
+typedef struct list_handler list_handler_t;
+struct list_handler
 {
-    node_t *head;
-    node_t *tail;
-    size_t data_size;
     void* (*add_data)(void *);
     void (*print_node)(void *);
     void (*update_node_index)(void *);
     node_t* (*search_method)(void *, char *);
+    void (*save_node_file)(void *, FILE *);
+    void (*load_node_file)(void *, FILE *);
+};
+
+typedef struct linkedlist linkedlist_t;
+struct linkedlist
+{
+    list_handler_t *hadler;
+    node_t *head;
+    node_t *tail;
+    size_t data_size;
 };
 
 extern node_t* get_first_list(linkedlist_t *linkedlist);
@@ -38,7 +46,7 @@ extern void add_linked_list(linkedlist_t *list, void *data);
 extern void release_linked_list(linkedlist_t *list);
 extern node_t* search_linked_list(linkedlist_t *list, char *search_str);
 extern void remove_linked_list(linkedlist_t *list, char* search_str);
-extern linkedlist_t* init_linked_list(void (*print_func)(void *), void* (*add_data)(void *), void (*update_index)(void *), node_t* (*search_method)(void *, char *), size_t data_size);
+extern linkedlist_t* init_linked_list(list_handler_t *list, size_t data_size);
 extern __uint32_t get_list_count(linkedlist_t *list);
 
 #endif

@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "DBMS/DBMS.h"
+#include "DBMS.h"
 
 int main(void)
 {   
