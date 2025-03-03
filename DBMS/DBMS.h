@@ -3,6 +3,10 @@
 
 #include <stdio.h>
 #include <assert.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdalign.h>
+#include <sys/stat.h>
 #include "UI.h"
 #include "LinkedList.h"
 

@@ -118,33 +118,3 @@ void remove_linked_list(linkedlist_t *list, char* search_str)
     
     free(remove_node);
 }
-
-void save_node_file(linkedlist_t *list)
-{
-    FILE *file = fopen("../node_data.txt","ab+");
-    
-    if(file != NULL)
-    {
-        list->hadler->save_node_file((void *)list, file);
-    }
-    else
-    {
-        printf("파일을 열수 없습니다.\n");
-        assert(file != NULL);
-    }
-}
-
-void load_node_file(linkedlist_t *list, char *file_path)
-{
-    FILE *file = fopen(file_path,"ab+");
-    
-    if(file != NULL)
-    {
-        list->hadler->load_node_file((void *)list, file);
-    }
-    else
-    {
-        printf("파일을 열수 없습니다.\n");
-        assert(file != NULL);
-    }
-}

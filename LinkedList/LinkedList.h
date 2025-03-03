@@ -4,6 +4,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdalign.h>
+#include <sys/stat.h>
 #include "/usr/include/assert.h"
 #include "common.h"
 
@@ -26,8 +30,6 @@ struct list_handler
     void (*print_node)(void *);
     void (*update_node_index)(void *);
     node_t* (*search_method)(void *, char *);
-    void (*save_node_file)(void *, FILE *);
-    void (*load_node_file)(void *, FILE *);
 };
 
 typedef struct linkedlist linkedlist_t;

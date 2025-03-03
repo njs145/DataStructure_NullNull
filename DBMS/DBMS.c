@@ -3,12 +3,13 @@
 #define MAX_OF_NODE     256U
 
 static __uint32_t g_age_index[MAX_OF_NODE];
+static char *file_path;
 
 typedef struct user_info_data user_info_data_t; 
-struct user_info_data
+struct __attribute__((packed)) user_info_data
 {
-    char *name;
-    char *phone_number;
+    char name[20];
+    char phone_number[20];
     __uint32_t age;
 };
 
@@ -17,6 +18,8 @@ void DBMS_search_user_by_name(void *list);
 void DBMS_search_user_by_age(void *list);
 void DBMS_print_all_user_information(void *list);
 void DBMS_search_remove_user_by_name(void *list);
+void DBMS_save_file_node_data(void *list, int file);
+void DBMS_load_file_node_data(void *list, char *path);
 
 exec_test_t data_structure_exec_func[MAX_OF_TEST + 1] = {
     [TITLE]  = {"Data Structure TEST (By JinSong)", NULL},
@@ -34,32 +37,41 @@ __uint32_t *DBMS_get_age_index(void)
 
 void DBMS_add_user(void *list)
 {
+    char input;
+    user_info_data_t user_data;
     linkedlist_t *target_list = (linkedlist_t *)list;
     printf("Enter user information [ex: jinsong 01012341234 99]\n\n");
 
-    user_info_data_t user[10] = {
-        [0] = {"aaa", "010-1111-1111", 23},
-        [1] = {"bbb", "010-2222-2222", 24},
-        [2] = {"cas", "010-3333-3333", 25},
-        [3] = {"cbs", "010-4444-4444", 20},
-        [4] = {"das", "010-5555-5555", 21},
-        [5] = {"eas", "010-6666-6666", 22},
-        [6] = {"edd", "010-6666-6666", 22},
-        [7] = {"fas", "010-6666-6666", 22},
-        [8] = {"fff", "010-6666-6666", 22},
-        [9] = {"gas", "010-6666-6666", 22}
-    };
+    printf("name: ");
+    scanf("%s", user_data.name);
     
-    add_linked_list(target_list, (void *)&(user[0]));
-    add_linked_list(target_list, (void *)&(user[1]));
-    add_linked_list(target_list, (void *)&(user[2]));
-    add_linked_list(target_list, (void *)&(user[3]));
-    add_linked_list(target_list, (void *)&(user[4]));
-    add_linked_list(target_list, (void *)&(user[5]));
-    add_linked_list(target_list, (void *)&(user[6]));
-    add_linked_list(target_list, (void *)&(user[7]));
-    add_linked_list(target_list, (void *)&(user[8]));
-    add_linked_list(target_list, (void *)&(user[9]));
+    printf("phone number: ");
+    scanf("%s", user_data.phone_number);
+
+    printf("age: ");
+    scanf("%d",  &user_data.age);
+
+    printf("name: %s phone number: %s age: %d\n",user_data.name, user_data.phone_number, user_data.age);
+    
+    add_linked_list(target_list, (void *)&(user_data));
+
+    printf("Do you want to save? (y/n)");
+    scanf(" %c",&input);
+    if(input == 'y')
+    {
+        int file = open(file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if(file != 0)
+        {
+            printf("save file\n");
+            DBMS_save_file_node_data((void *)target_list, file);      
+        }
+        else
+        {
+            printf("파일을 열수 없습니다.\n");
+            assert(file != 0);
+        }
+    }
+
 }
 
 void DBMS_print_user_information(void *user_info)
@@ -174,7 +186,6 @@ void DBMS_print_all_user_information(void *list)
     /* print all information */
     while(node != target_list->tail)
     {
-        // DBMS_print_user_information((user_info_data_t*)(node->data));
         target_list->hadler->print_node((void *)(node->data));
 
         node = node->next;
@@ -253,6 +264,7 @@ void DBMS_search_user_by_age(void *list)
 void DBMS_search_remove_user_by_name(void *list)
 {
     char name[256];
+    char input;
     linkedlist_t* target_list = NULL;
 
     /* transfer type to list type */
@@ -266,7 +278,25 @@ void DBMS_search_remove_user_by_name(void *list)
     printf("Name: ");
     scanf("%s",name);
 
+    /* remove selected node */
     remove_linked_list(target_list, name);
+
+    printf("Do you want to save? (y/n)");
+    scanf(" %c",&input);
+    if(input == 'y')
+    {
+        int file = open(file_path, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        if(file != 0)
+        {
+            printf("save file\n");
+            DBMS_save_file_node_data((void *)target_list, file);          
+        }
+        else
+        {
+            printf("파일을 열수 없습니다.\n");
+            assert(file != 0);
+        }
+    }
 }
 
 linkedlist_t* DBMS_LinkedList_init_linked(list_handler_t *handler, size_t data_size)
@@ -278,26 +308,119 @@ linkedlist_t* DBMS_LinkedList_init_linked(list_handler_t *handler, size_t data_s
     return target_list;
 }
 
+void DBMS_save_file_node_data(void *list, int file)
+{
+    linkedlist_t *target_list = NULL;
+    node_t *node = NULL;
+    __uint8_t *data = NULL;
+    __uint32_t count = 0;
+
+    if(file != 0)
+    {
+        target_list = (linkedlist_t *)list;
+        node = target_list->head->next;
+
+        /* To prevent fragmented memory allocation, the aligned_alloc function is used. */
+        data = aligned_alloc(alignof(user_info_data_t),get_list_count(list) * sizeof(user_info_data_t));
+
+        if(data != NULL)
+        {
+            /* copy all data to buffer */
+            while(node != target_list->tail)
+            {
+                memcpy(&(((user_info_data_t *)(data))[count].name), &(((user_info_data_t *)(node->data))->name), sizeof((((user_info_data_t *)(node->data))->name)));
+                memcpy(&(((user_info_data_t *)(data))[count].phone_number), &(((user_info_data_t *)(node->data))->phone_number), sizeof((((user_info_data_t *)(node->data))->phone_number)));
+                ((user_info_data_t *)(data))[count].age = ((user_info_data_t *)(node->data))->age;
+
+                count ++;
+                node = node->next;
+            }
+        }
+        else
+        {
+            printf("data alloc fail!\n");
+            assert(data != NULL);
+        }
+        
+        /* save data */
+        write(file, data, (get_list_count(list) * sizeof(user_info_data_t)));
+
+        close(file);
+    }
+    else
+    {
+        printf("invaild file!\n");
+        assert(file != 0);
+    }
+}
+
+void DBMS_load_file_node_data(void *list, char *path)
+{
+    __uint8_t *data = NULL;
+    linkedlist_t *target_list = NULL;
+    struct stat file_stat;
+    user_info_data_t *target_data = NULL;
+    node_t *node = NULL;
+    size_t node_count;
+    __uint32_t i;
+    int error;
+
+    target_list = (linkedlist_t *)list;
+    int file = open(path, O_RDONLY, 0644);
+    if(file != 0)
+    {
+        /* To get file's information such like file size, fstat function is used */
+        error = fstat(file, &file_stat);        
+        if(error != -1)
+        {
+            /* To prevent fragmented memory allocation, the aligned_alloc function is used. */
+            data = aligned_alloc(alignof(user_info_data_t), file_stat.st_size);
+            read(file, (void *)data, file_stat.st_size);
+        }
+        else
+        {
+            printf("fstat error\n");
+            assert(error != -1);
+        }
+
+        /* transfer data type to user data type */
+        target_data = (user_info_data_t *)data;
+        node = target_list->head->next;
+
+        node_count = (file_stat.st_size)/sizeof(user_info_data_t);
+
+        /* add loaded data to node */
+        for(i = 0; i < node_count; i ++)
+        {
+            add_linked_list(target_list, (void *)(&target_data[i]));
+        }
+
+        close(file);
+
+    }
+    else
+    {
+        printf("invaild file!\n");
+        assert(file != 0);
+    }
+}
+
 void DBMS_run_DBMS(void)
 {
-
-    /*
-    void* (*add_data)(void *);
-    void (*print_node)(void *);
-    void (*update_node_index)(void *);
-    node_t* (*search_method)(void *, char *);
-    void (*save_node_file)(void *, FILE *);
-    void (*load_node_file)(void *, FILE *);
-    */
     linkedlist_t *list = NULL;
+
     list_handler_t list_handler = {
         DBMS_add_data,
         DBMS_print_user_information,
         DBMS_update_index_age,
         DBMS_search_by_name,
     };
+
+    /* define path */
+    file_path = "node_data.bin";
     
     /* get new list */
     list = DBMS_LinkedList_init_linked(&list_handler, sizeof(user_info_data_t));
+    DBMS_load_file_node_data((void *)list, file_path);
     UI_event_loop_exec_database((void *)list, data_structure_exec_func, sizeof(data_structure_exec_func)/sizeof(exec_test_t));
 }
