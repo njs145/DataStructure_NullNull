@@ -35,7 +35,7 @@ struct list_handler
 typedef struct linkedlist linkedlist_t;
 struct linkedlist
 {
-    list_handler_t *hadler;
+    list_handler_t *handler;
     node_t *head;
     node_t *tail;
     size_t data_size;

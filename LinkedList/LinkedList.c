@@ -5,7 +5,7 @@ linkedlist_t* init_linked_list(list_handler_t *handler, size_t data_size)
     linkedlist_t *new_linked_list = NULL;
 
     new_linked_list = malloc(sizeof(linkedlist_t));
-    new_linked_list->hadler = handler;
+    new_linked_list->handler = handler;
     new_linked_list->head = malloc(sizeof(node_t));
     new_linked_list->tail = malloc(sizeof(node_t));
 
@@ -37,7 +37,7 @@ void add_linked_list(linkedlist_t *list, void *data)
     memset(add_node,0,sizeof(node_t));
     if(add_node != NULL)
     {
-        add_node->data = list->hadler->add_data(data);
+        add_node->data = list->handler->add_data(data);
     #if (ADD_TYPE == ADD_TYPE_HEAD)
         add_node->next = temp_node->next;    
         temp_node->next = add_node;
@@ -59,7 +59,7 @@ void add_linked_list(linkedlist_t *list, void *data)
         assert(0);
     }
 
-    list->hadler->update_node_index(list);
+    list->handler->update_node_index(list);
 }
 
 void release_linked_list(linkedlist_t *list)
@@ -83,7 +83,7 @@ node_t* search_linked_list(linkedlist_t *list, char *search_str)
 {
     node_t *search_point = NULL;
 
-    search_point = list->hadler->search_method(list, search_str);
+    search_point = list->handler->search_method(list, search_str);
 
     return search_point;
 }
@@ -109,12 +109,12 @@ void remove_linked_list(linkedlist_t *list, char* search_str)
 {
     node_t *remove_node = NULL;
     
-    remove_node = list->hadler->search_method(list, search_str);
+    remove_node = list->handler->search_method(list, search_str);
     
     remove_node->prev->next = remove_node->next;
     remove_node->next->prev = remove_node->prev;
     
-    list->hadler->update_node_index;
+    list->handler->update_node_index;
     
     free(remove_node);
 }

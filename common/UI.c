@@ -14,7 +14,12 @@ static void UI_print_side_padding(__uint32_t padding_size)
     }
 }
 
-static void UI_print_line(__uint32_t line_len, char design_line)
+__uint32_t UI_get_line_size(void)
+{
+    return line_len;
+}
+
+void UI_print_line(__uint32_t line_len, char design_line)
 {
     __uint32_t count;
     for(count = 0; count < line_len; count ++)

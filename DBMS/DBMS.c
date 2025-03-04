@@ -20,19 +20,30 @@ void DBMS_print_all_user_information(void *list);
 void DBMS_search_remove_user_by_name(void *list);
 void DBMS_save_file_node_data(void *list, int file);
 void DBMS_load_file_node_data(void *list, char *path);
+void DBMS_edit_node_data(void *list);
 
 exec_test_t data_structure_exec_func[MAX_OF_TEST + 1] = {
     [TITLE]  = {"Data Structure TEST (By JinSong)", NULL},
     [TEST_1] = {"[1]New", DBMS_add_user},
     [TEST_2] = {"[2]Search", DBMS_search_user_by_name},
     [TEST_3] = {"[3]Search age", DBMS_search_user_by_age},
-    [TEST_4] = {"[4]Print", DBMS_print_all_user_information},
-    [TEST_5] = {"[5]Remove", DBMS_search_remove_user_by_name},
+    [TEST_4] = {"[4]Edit", DBMS_edit_node_data}, 
+    [TEST_5] = {"[5]Print", DBMS_print_all_user_information},
+    [TEST_6] = {"[6]Remove", DBMS_search_remove_user_by_name},
 };
 
 __uint32_t *DBMS_get_age_index(void)
 {
     return g_age_index;
+}
+
+linkedlist_t* DBMS_LinkedList_init_linked(list_handler_t *handler, size_t data_size)
+{
+    linkedlist_t * target_list = NULL;
+    
+    /* init list */
+    target_list = init_linked_list(handler, data_size);
+    return target_list;
 }
 
 void DBMS_add_user(void *list)
@@ -186,7 +197,7 @@ void DBMS_print_all_user_information(void *list)
     /* print all information */
     while(node != target_list->tail)
     {
-        target_list->hadler->print_node((void *)(node->data));
+        target_list->handler->print_node((void *)(node->data));
 
         node = node->next;
     }
@@ -208,7 +219,7 @@ void DBMS_search_user_by_name(void *list)
 
 
     /* print user information */
-    target_list->hadler->print_node((void *)(search_user->data));
+    target_list->handler->print_node((void *)(search_user->data));
 }
 
 void DBMS_search_user_by_age(void *list)
@@ -299,13 +310,51 @@ void DBMS_search_remove_user_by_name(void *list)
     }
 }
 
-linkedlist_t* DBMS_LinkedList_init_linked(list_handler_t *handler, size_t data_size)
+void DBMS_edit_node_data(void *list)
 {
-    linkedlist_t * target_list = NULL;
+    linkedlist_t *target_list = NULL;
+    node_t *node = NULL;
+    char name[20];
+    char phone_number[20];
+    __uint32_t age;
+    user_info_data_t change_data;
+    char input;
     
-    /* init list */
-    target_list = init_linked_list(handler, data_size);
-    return target_list;
+    target_list = (linkedlist_t *)list;
+
+    DBMS_print_all_user_information((void *)target_list);
+    
+    UI_print_line(UI_get_line_size(),'=');
+    printf("\n");
+    printf("Enter the name to modifie information\n");
+    printf("name: ");
+    scanf("%s", change_data.name);
+    node = target_list->handler->search_method((void *)target_list, change_data.name);
+
+    printf("Enter the information to be modified.\n\n");
+    printf("phone number: ");
+    scanf("%s", change_data.phone_number);
+    printf("age: ");
+    scanf("%d", &change_data.age);
+
+    memcpy(node->data, (void *)(&change_data), sizeof(user_info_data_t));
+    
+    printf("Do you want to save? (y/n)");
+    scanf(" %c",&input);
+    if(input == 'y')
+    {
+        int file = open(file_path, O_WRONLY, 0644);
+        if(file != 0)
+        {
+            printf("save file\n");
+            DBMS_save_file_node_data((void *)target_list, file);          
+        }
+        else
+        {
+            printf("파일을 열수 없습니다.\n");
+            assert(file != 0);
+        }
+    }
 }
 
 void DBMS_save_file_node_data(void *list, int file)
